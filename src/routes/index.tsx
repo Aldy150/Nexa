@@ -1,15 +1,16 @@
+"use client";
+
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, CheckCircle2, Briefcase, GraduationCap, Users, Award } from "lucide-react";
 import heroImg from "../assets/hero-nexa.jpg";
 import { formations } from "../data/formations";
+import FadeIn from "../components/animation/FadeIn";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "NEXA — Formations numériques & insertion professionnelle" },
       { name: "description", content: "Centre de formation NEXA : développement web, community management, graphisme, réseau, bureautique. Accompagnement vers l'emploi garanti." },
-      { property: "og:title", content: "NEXA — Formations numériques & insertion professionnelle" },
-      { property: "og:description", content: "Formez-vous aux métiers du numérique avec NEXA et accédez à l'emploi grâce à notre accompagnement personnalisé." },
     ],
   }),
   component: Index,
@@ -18,7 +19,7 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <>
-      {/* HERO */}
+      {/* HERO - On garde l'animation CSS initiale pour éviter un flash au chargement */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-hero opacity-95" />
         <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `url(${heroImg})`, backgroundSize: "cover", backgroundPosition: "center" }} />
@@ -42,13 +43,13 @@ function Index() {
               </Link>
             </div>
           </div>
-          <div className="relative hidden lg:block">
+          <div className="relative hidden lg:block animate-fade-in">
             <img src={heroImg} width={1536} height={1024} alt="Apprenants NEXA en formation numérique" className="rounded-2xl shadow-elegant" />
           </div>
         </div>
       </section>
 
-      {/* STATS */}
+      {/* STATS - Apparition en cascade */}
       <section className="border-b border-border bg-background py-12">
         <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-4 sm:px-6 md:grid-cols-4 lg:px-8">
           {[
@@ -56,12 +57,14 @@ function Index() {
             { value: "87%", label: "Taux d'insertion", icon: Briefcase },
             { value: "7", label: "Filières métiers", icon: Award },
             { value: "+50", label: "Entreprises partenaires", icon: Users },
-          ].map((s) => (
-            <div key={s.label} className="rounded-2xl border border-border bg-card p-6 text-center shadow-card">
-              <s.icon className="mx-auto h-8 w-8 text-accent" />
-              <div className="mt-3 font-display text-3xl font-bold text-gradient">{s.value}</div>
-              <div className="mt-1 text-sm text-muted-foreground">{s.label}</div>
-            </div>
+          ].map((s, i) => (
+            <FadeIn key={s.label} delay={i * 0.1}>
+              <div className="rounded-2xl border border-border bg-card p-6 text-center shadow-card h-full">
+                <s.icon className="mx-auto h-8 w-8 text-accent" />
+                <div className="mt-3 font-display text-3xl font-bold text-gradient">{s.value}</div>
+                <div className="mt-1 text-sm text-muted-foreground">{s.label}</div>
+              </div>
+            </FadeIn>
           ))}
         </div>
       </section>
@@ -69,35 +72,40 @@ function Index() {
       {/* À PROPOS COURT */}
       <section className="bg-gradient-subtle py-20">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="font-display text-3xl font-bold sm:text-4xl">Plus qu'un centre de formation</h2>
-          <p className="mt-6 text-lg text-muted-foreground">
-            NEXA est un <strong className="text-foreground">hub de transformation professionnelle</strong> qui combine
-            apprentissage technique de pointe, coaching personnalisé et mise en relation directe avec les entreprises.
-            Notre mission : faire de chaque apprenant un professionnel prêt à réussir.
-          </p>
+          <FadeIn>
+            <h2 className="font-display text-3xl font-bold sm:text-4xl">Plus qu'un centre de formation</h2>
+            <p className="mt-6 text-lg text-muted-foreground">
+              NEXA est un <strong className="text-foreground">hub de transformation professionnelle</strong> qui combine
+              apprentissage technique de pointe, coaching personnalisé et mise en relation directe avec les entreprises.
+            </p>
+          </FadeIn>
         </div>
       </section>
 
       {/* FORMATIONS */}
       <section className="bg-background py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="font-display text-3xl font-bold sm:text-4xl">Nos formations</h2>
-            <p className="mt-4 text-muted-foreground">Des parcours intensifs pensés pour les métiers d'aujourd'hui et de demain.</p>
-          </div>
+          <FadeIn>
+            <div className="mx-auto max-w-2xl text-center">
+              <h2 className="font-display text-3xl font-bold sm:text-4xl">Nos formations</h2>
+              <p className="mt-4 text-muted-foreground">Des parcours intensifs pensés pour les métiers d'aujourd'hui et de demain.</p>
+            </div>
+          </FadeIn>
           <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {formations.map((f) => (
-              <div key={f.slug} className="group rounded-2xl border border-border bg-card p-6 shadow-card transition-smooth hover:-translate-y-1 hover:shadow-elegant">
-                <div className="text-4xl">{f.icon}</div>
-                <h3 className="mt-4 font-display text-xl font-bold">{f.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{f.short}</p>
-                <div className="mt-4 flex items-center justify-between">
-                  <span className="rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold text-accent">{f.duration}</span>
-                  <Link to="/formations" className="text-sm font-semibold text-primary transition-smooth group-hover:text-accent">
-                    Découvrir →
-                  </Link>
+            {formations.map((f, i) => (
+              <FadeIn key={f.slug} delay={i * 0.1}>
+                <div className="group rounded-2xl border border-border bg-card p-6 shadow-card transition-smooth hover:-translate-y-1 hover:shadow-elegant h-full">
+                  <div className="text-4xl">{f.icon}</div>
+                  <h3 className="mt-4 font-display text-xl font-bold">{f.title}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{f.short}</p>
+                  <div className="mt-4 flex items-center justify-between">
+                    <span className="rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold text-accent">{f.duration}</span>
+                    <Link to="/formations" className="text-sm font-semibold text-primary transition-smooth group-hover:text-accent">
+                      Découvrir →
+                    </Link>
+                  </div>
                 </div>
-              </div>
+              </FadeIn>
             ))}
           </div>
         </div>
@@ -106,10 +114,12 @@ function Index() {
       {/* POURQUOI */}
       <section className="bg-gradient-subtle py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="font-display text-3xl font-bold sm:text-4xl">Pourquoi choisir NEXA ?</h2>
-          </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
+          <FadeIn>
+            <div className="mx-auto max-w-2xl text-center mb-12">
+              <h2 className="font-display text-3xl font-bold sm:text-4xl">Pourquoi choisir NEXA ?</h2>
+            </div>
+          </FadeIn>
+          <div className="grid gap-6 md:grid-cols-3">
             {[
               { t: "Pédagogie pratique", d: "70% de pratique, projets réels et portfolio à la sortie." },
               { t: "Formateurs experts", d: "Professionnels en activité dans des entreprises tech." },
@@ -117,12 +127,14 @@ function Index() {
               { t: "Communauté solide", d: "Une promotion soudée, un réseau d'alumni actif." },
               { t: "Équipement moderne", d: "Salles équipées, connexion fibre, outils professionnels." },
               { t: "Certification reconnue", d: "Diplômes valorisés sur le marché de l'emploi." },
-            ].map((x) => (
-              <div key={x.t} className="rounded-2xl border border-border bg-card p-6 shadow-card">
-                <CheckCircle2 className="h-6 w-6 text-accent" />
-                <h3 className="mt-3 font-display text-lg font-bold">{x.t}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{x.d}</p>
-              </div>
+            ].map((x, i) => (
+              <FadeIn key={x.t} delay={i * 0.05}>
+                <div className="rounded-2xl border border-border bg-card p-6 shadow-card h-full">
+                  <CheckCircle2 className="h-6 w-6 text-accent" />
+                  <h3 className="mt-3 font-display text-lg font-bold">{x.t}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{x.d}</p>
+                </div>
+              </FadeIn>
             ))}
           </div>
         </div>
@@ -131,27 +143,31 @@ function Index() {
       {/* TÉMOIGNAGES */}
       <section className="bg-background py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="font-display text-3xl font-bold sm:text-4xl">Ils ont transformé leur carrière</h2>
-          </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
+          <FadeIn>
+            <div className="mx-auto max-w-2xl text-center mb-12">
+              <h2 className="font-display text-3xl font-bold sm:text-4xl">Ils ont transformé leur carrière</h2>
+            </div>
+          </FadeIn>
+          <div className="grid gap-6 md:grid-cols-3">
             {[
               { n: "Awa Diop", r: "Développeuse Front-End", t: "En 9 mois, je suis passée de zéro à mon premier CDI dans une startup. NEXA a tout changé." },
               { n: "Moussa Sarr", r: "Community Manager", t: "L'accompagnement après la formation est exceptionnel. J'ai signé avant même la fin du cursus." },
               { n: "Fatou Ndiaye", r: "Graphiste freelance", t: "Une équipe pédagogique passionnée et un réseau qui ouvre de vraies opportunités." },
-            ].map((p) => (
-              <figure key={p.n} className="rounded-2xl border border-border bg-card p-6 shadow-card">
-                <blockquote className="text-sm italic text-foreground">« {p.t} »</blockquote>
-                <figcaption className="mt-4 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-hero font-semibold text-primary-foreground">
-                    {p.n.charAt(0)}
-                  </div>
-                  <div>
-                    <div className="text-sm font-semibold">{p.n}</div>
-                    <div className="text-xs text-muted-foreground">{p.r}</div>
-                  </div>
-                </figcaption>
-              </figure>
+            ].map((p, i) => (
+              <FadeIn key={p.n} delay={i * 0.1}>
+                <figure className="rounded-2xl border border-border bg-card p-6 shadow-card h-full">
+                  <blockquote className="text-sm italic text-foreground">« {p.t} »</blockquote>
+                  <figcaption className="mt-4 flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-hero font-semibold text-primary-foreground">
+                      {p.n.charAt(0)}
+                    </div>
+                    <div>
+                      <div className="text-sm font-semibold">{p.n}</div>
+                      <div className="text-xs text-muted-foreground">{p.r}</div>
+                    </div>
+                  </figcaption>
+                </figure>
+              </FadeIn>
             ))}
           </div>
         </div>
@@ -159,13 +175,15 @@ function Index() {
 
       {/* CTA FINAL */}
       <section className="bg-gradient-hero py-20">
-        <div className="mx-auto max-w-4xl px-4 text-center text-primary-foreground sm:px-6 lg:px-8">
-          <h2 className="font-display text-3xl font-bold sm:text-4xl">Prêt à lancer votre carrière numérique ?</h2>
-          <p className="mt-4 text-lg text-white/85">Rejoignez la prochaine promotion NEXA et faites de votre passion un métier.</p>
-          <Link to="/contact" className="mt-8 inline-flex items-center gap-2 rounded-full bg-gradient-accent px-8 py-4 text-base font-semibold text-accent-foreground shadow-elegant transition-smooth hover:scale-105">
-            S'inscrire à une formation <ArrowRight className="h-5 w-5" />
-          </Link>
-        </div>
+        <FadeIn>
+          <div className="mx-auto max-w-4xl px-4 text-center text-primary-foreground sm:px-6 lg:px-8">
+            <h2 className="font-display text-3xl font-bold sm:text-4xl">Prêt à lancer votre carrière numérique ?</h2>
+            <p className="mt-4 text-lg text-white/85">Rejoignez la prochaine promotion NEXA et faites de votre passion un métier.</p>
+            <Link to="/contact" className="mt-8 inline-flex items-center gap-2 rounded-full bg-gradient-accent px-8 py-4 text-base font-semibold text-accent-foreground shadow-elegant transition-smooth hover:scale-105">
+              S'inscrire à une formation <ArrowRight className="h-5 w-5" />
+            </Link>
+          </div>
+        </FadeIn>
       </section>
     </>
   );

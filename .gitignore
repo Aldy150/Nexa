@@ -1,32 +1,57 @@
-# Logs
+# --- ENVIRONNEMENT (CRITIQUE) ---
+# On bloque tous les fichiers .env
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.local
+
+# --- DÉPENDANCES ---
+node_modules/
+/jspm_packages/
+
+# --- BUILDS & OUTPUT ---
+.next/
+/dist/
+/out/
+/build/
+.output/
+.vinxi/
+.nitro/
+/dist-ssr/
+
+# --- PRISMA (Important pour Neon) ---
+# On ignore les fichiers de base de données SQLite locaux 
+# et les logs de migration si nécessaire
+/prisma/*.db
+/prisma/*.db-journal
+
+# --- CACHE & OUTILS ---
+.cache/
+.npm/
+.eslintcache
+.stylelintcache
+.tanstack/
+.wrangler/
+.dev.vars
+
+# --- LOGS ---
 logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-.output
-.vinxi
-.tanstack/**
-.nitro
-*.local
-
-# Wrangler / Cloudflare
-.wrangler/
-.dev.vars
-
-# Editor directories and files
+# --- ÉDITEURS & OS ---
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+.env

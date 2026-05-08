@@ -2,7 +2,7 @@ import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/r
 import { Header } from "../components/site/Header";
 import { Footer } from "../components/site/Footer";
 import { WhatsAppFab } from "../components/site/WhatsAppFab";
-import { Toaster } from "../components/ui/sonner";
+import { Toaster } from "sonner"; // Import direct de sonner pour plus de simplicité
 
 import appCss from "../styles.css?url";
 
@@ -31,8 +31,8 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "NEXA — Centre de formation numérique & insertion professionnelle" },
-      { name: "description", content: "NEXA forme aux métiers du numérique (développement web, community management, graphisme, réseau) et accompagne vers l'emploi au Sénégal et en Afrique." },
-      { name: "keywords", content: "formation informatique, formation développement web, centre de formation numérique, insertion professionnelle, NEXA" },
+      { name: "description", content: "NEXA forme aux métiers du numérique (développement web, community management, graphisme) et accompagne vers l'emploi au Congo et en Afrique." },
+      { name: "keywords", content: "formation informatique, formation développement web, Brazzaville, Congo, insertion professionnelle, NEXA" },
       { property: "og:title", content: "NEXA — Formations numériques & insertion professionnelle" },
       { property: "og:description", content: "Hub de transformation professionnelle : formez-vous aux métiers du numérique et accédez à l'emploi." },
       { property: "og:type", content: "website" },
@@ -51,11 +51,15 @@ export const Route = createRootRoute({
           "@context": "https://schema.org",
           "@type": "EducationalOrganization",
           name: "NEXA",
-          description: "Centre de formation numérique et insertion professionnelle",
+          description: "Centre de formation numérique et insertion professionnelle au Congo",
           url: "https://nexa-formation.com",
           email: "contact@nexa-formation.com",
-          telephone: "+221770000000",
-          address: { "@type": "PostalAddress", addressLocality: "Dakar", addressCountry: "SN" },
+          telephone: "+242056902178",
+          address: { 
+            "@type": "PostalAddress", 
+            addressLocality: "Brazzaville", 
+            addressCountry: "CG" 
+          },
         }),
       },
     ],
@@ -88,7 +92,16 @@ function RootComponent() {
       </main>
       <Footer />
       <WhatsAppFab />
-      <Toaster />
+      {/* Configuration du Toaster pour un rendu pro */}
+      <Toaster 
+        position="top-right" 
+        richColors 
+        closeButton 
+        theme="light"
+        toastOptions={{
+          style: { padding: '16px' },
+        }}
+      />
     </div>
   );
 }
