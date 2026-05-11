@@ -1,33 +1,25 @@
-# --- ENVIRONNEMENT (CRITIQUE) ---
-# On bloque tous les fichiers .env
+# ENV
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-*.local
+.env.*
+!.env.example
 
-# --- DÉPENDANCES ---
+# DEPENDENCIES
 node_modules/
-/jspm_packages/
 
-# --- BUILDS & OUTPUT ---
-.next/
-/dist/
-/out/
-/build/
+# BUILD
+dist/
+build/
+out/
 .output/
 .vinxi/
 .nitro/
 /dist-ssr/
 
-# --- PRISMA (Important pour Neon) ---
-# On ignore les fichiers de base de données SQLite locaux 
-# et les logs de migration si nécessaire
-/prisma/*.db
-/prisma/*.db-journal
+# PRISMA (SQLite only if used locally)
+*.db
+*.db-journal
 
-# --- CACHE & OUTILS ---
+# CACHE
 .cache/
 .npm/
 .eslintcache
@@ -36,23 +28,15 @@ node_modules/
 .wrangler/
 .dev.vars
 
-# --- LOGS ---
-logs
+# LOGS
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
 pnpm-debug.log*
 
-# --- ÉDITEURS & OS ---
-.vscode/*
+# IDE / OS
+.vscode/
 !.vscode/extensions.json
 .idea/
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-.env
-.env.d.ts
