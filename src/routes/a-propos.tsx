@@ -63,7 +63,7 @@ function AboutPage() {
           <FadeIn>
             <h2 className="font-display text-3xl font-bold">Notre histoire</h2>
             <p className="mt-6 text-lg text-muted-foreground">
-              Né d'un constat simple — trop de jeunes talents restent éloignés de l'emploi malgré leur potentiel —
+              Né d'un constat simple trop de jeunes talents restent éloignés de l'emploi malgré leur potentiel
               NEXA a été fondé pour combler le fossé entre la formation et le marché du travail. Depuis, nous
               avons accompagné plus de <strong className="text-foreground">1 200 apprenants</strong> vers une carrière qui leur ressemble.
             </p>
