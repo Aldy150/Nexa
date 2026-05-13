@@ -7,7 +7,8 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { formations } from "../data/formations";
 import FadeIn from "../components/animation/FadeIn";
-import { submitContactAction } from "../actions/contact";
+
+// ✅ PLUS D'IMPORT de "../../server/api" ici !
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -19,7 +20,6 @@ export const Route = createFileRoute("/contact")({
   component: ContactPage,
 });
 
-// Schéma de validation Zod strict
 const schema = z.object({
   name: z.string().trim().min(2, "Nom trop court").max(100),
   email: z.string().trim().email("Email invalide"),
@@ -33,13 +33,18 @@ function ContactPage() {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     const formData = new FormData(e.currentTarget);
-    const rawData = Object.fromEntries(formData);
-    
-    // 1. Validation client
+    const rawData = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      phone: formData.get("phone"),
+      formation: formData.get("formation"),
+      message: formData.get("message") || undefined,
+    };
+
     const result = schema.safeParse(rawData);
-    
+
     if (!result.success) {
       toast.error(result.error.issues[0].message);
       return;
@@ -48,14 +53,22 @@ function ContactPage() {
     setSubmitting(true);
 
     try {
-      // 2. Appel de l'action serveur (Neon + Resend)
-      const response = await submitContactAction({ data: result.data });
-      
-      if (response.success) {
+      // ✅ Correction dans src/routes/contact.tsx :
+      const response = await fetch("http://localhost:3000/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(result.data),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
         toast.success("Demande enregistrée !", {
           description: "L'équipe NEXA vous contactera sous 24h.",
         });
         (e.target as HTMLFormElement).reset();
+      } else {
+        throw new Error("Erreur serveur");
       }
     } catch (error) {
       console.error("Erreur formulaire:", error);
@@ -69,12 +82,12 @@ function ContactPage() {
     <>
       {/* HERO SECTION */}
       <section className="bg-gradient-hero py-20 text-primary-foreground relative overflow-hidden">
-        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8 relative z-10">
+        <div className="mx-auto max-w-4xl px-4 text-center relative z-10 sm:px-6 lg:px-8">
           <FadeIn>
-            <h1 className="font-display text-4xl font-extrabold sm:text-6xl text-white tracking-tight">
+            <h1 className="font-display text-4xl font-extrabold tracking-tight text-white sm:text-6xl">
               Rejoignez NEXA
             </h1>
-            <p className="mt-6 text-xl text-white/90 font-light max-w-2xl mx-auto">
+            <p className="mx-auto mt-6 max-w-2xl text-xl font-light text-white/90">
               Faites le premier pas vers votre nouvelle carrière numérique au Congo.
             </p>
           </FadeIn>
@@ -83,18 +96,23 @@ function ContactPage() {
 
       <section className="bg-background py-16 -mt-10">
         <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 md:grid-cols-3 lg:px-8">
-          
+
           {/* COLONNE INFOS */}
           <div className="space-y-6">
-            <h3 className="text-2xl font-bold font-display px-2">Nos coordonnées</h3>
+            <h3 className="font-display px-2 text-2xl font-bold">Nos coordonnées</h3>
             {[
               { href: "tel:+242056902178", icon: Phone, label: "Téléphone", val: "+242 05 690 21 78" },
               { href: "https://wa.me/242056902178", icon: MessageCircle, label: "WhatsApp", val: "Discuter en direct", target: "_blank" },
               { href: "mailto:contact@nexa-formation.com", icon: Mail, label: "Email", val: "contact@nexa-formation.com" },
             ].map((item, i) => (
               <FadeIn key={item.label} delay={i * 0.1}>
-                <a href={item.href} target={item.target} rel="noopener noreferrer" className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-5 shadow-sm transition-all hover:border-accent/50 hover:shadow-md">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-accent group-hover:bg-accent group-hover:text-white transition-colors">
+                <a
+                  href={item.href}
+                  target={item.target}
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-5 shadow-sm transition-all hover:border-accent/50 hover:shadow-md"
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-accent transition-colors group-hover:bg-accent group-hover:text-white">
                     <item.icon className="h-6 w-6" />
                   </div>
                   <div>
@@ -124,33 +142,66 @@ function ContactPage() {
                 <div className="grid gap-6 sm:grid-cols-2">
                   <div className="space-y-2">
                     <label className="text-sm font-semibold" htmlFor="name">Nom complet</label>
-                    <input id="name" name="name" required placeholder="Ex: Eric Massita" className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition-all" />
+                    <input
+                      id="name"
+                      name="name"
+                      required
+                      placeholder="Ex: Eric Massita"
+                      className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-accent"
+                    />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-semibold" htmlFor="email">Email professionnel</label>
-                    <input id="email" name="email" type="email" required placeholder="eric@exemple.com" className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition-all" />
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                      placeholder="eric@exemple.com"
+                      className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-accent"
+                    />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-semibold" htmlFor="phone">Numéro WhatsApp</label>
-                    <input id="phone" name="phone" required placeholder="+242 -- --- -- --" className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition-all" />
+                    <input
+                      id="phone"
+                      name="phone"
+                      required
+                      placeholder="+242 -- --- -- --"
+                      className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-accent"
+                    />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-semibold" htmlFor="formation">Formation d'intérêt</label>
-                    <select id="formation" name="formation" required defaultValue="" className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition-all appearance-none cursor-pointer">
+                    <select
+                      id="formation"
+                      name="formation"
+                      required
+                      defaultValue=""
+                      className="w-full cursor-pointer appearance-none rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-accent"
+                    >
                       <option value="" disabled>Sélectionnez un programme</option>
-                      {formations.map((f) => <option key={f.slug} value={f.slug}>{f.title}</option>)}
+                      {formations.map((f) => (
+                        <option key={f.slug} value={f.slug}>{f.title}</option>
+                      ))}
                     </select>
                   </div>
                 </div>
                 <div className="mt-6 space-y-2">
                   <label className="text-sm font-semibold" htmlFor="message">Message ou questions (optionnel)</label>
-                  <textarea id="message" name="message" rows={4} placeholder="Dites-nous en plus sur vos objectifs..." className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition-all resize-none" />
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={4}
+                    placeholder="Dites-nous en plus sur vos objectifs..."
+                    className="w-full resize-none rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-accent"
+                  />
                 </div>
-                
-                <button 
-                  type="submit" 
-                  disabled={submitting} 
-                  className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-accent px-8 py-4 text-sm font-bold text-white shadow-lg transition-all hover:shadow-accent/20 hover:scale-[1.02] active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
+
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-accent px-8 py-4 text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.02] hover:shadow-accent/20 active:scale-95 disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   {submitting ? (
                     <>

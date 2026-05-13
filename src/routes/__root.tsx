@@ -2,7 +2,7 @@ import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/r
 import { Header } from "../components/site/Header";
 import { Footer } from "../components/site/Footer";
 import { WhatsAppFab } from "../components/site/WhatsAppFab";
-import { Toaster } from "sonner"; // Import direct de sonner pour plus de simplicité
+import { Toaster } from "sonner";
 
 import appCss from "../styles.css?url";
 
@@ -30,78 +30,25 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "NEXA — Centre de formation numérique & insertion professionnelle" },
-      { name: "description", content: "NEXA forme aux métiers du numérique (développement web, community management, graphisme) et accompagne vers l'emploi au Congo et en Afrique." },
-      { name: "keywords", content: "formation informatique, formation développement web, Brazzaville, Congo, insertion professionnelle, NEXA" },
-      { property: "og:title", content: "NEXA — Formations numériques & insertion professionnelle" },
-      { property: "og:description", content: "Hub de transformation professionnelle : formez-vous aux métiers du numérique et accédez à l'emploi." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { title: "NEXA - Formations numériques" },
     ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" },
-    ],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "EducationalOrganization",
-          name: "NEXA",
-          description: "Centre de formation numérique et insertion professionnelle au Congo",
-          url: "https://nexa-formation.com",
-          email: "contact@nexa-formation.com",
-          telephone: "+242056902178",
-          address: { 
-            "@type": "PostalAddress", 
-            addressLocality: "Brazzaville", 
-            addressCountry: "CG" 
-          },
-        }),
-      },
-    ],
+    links: [{ rel: "stylesheet", href: appCss }],
   }),
-  shellComponent: RootShell,
-  component: RootComponent,
+  component: RootLayout,
   notFoundComponent: NotFoundComponent,
 });
 
-function RootShell({ children }: { children: React.ReactNode }) {
+function RootLayout() {
   return (
-    <html lang="fr">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  );
-}
-
-function RootComponent() {
-  return (
-    <div className="flex min-h-screen flex-col">
+    <>
       <Header />
       <main className="flex-1">
         <Outlet />
       </main>
       <Footer />
       <WhatsAppFab />
-      {/* Configuration du Toaster pour un rendu pro */}
-      <Toaster 
-        position="top-right" 
-        richColors 
-        closeButton 
-        theme="light"
-        toastOptions={{
-          style: { padding: '16px' },
-        }}
-      />
-    </div>
+      <Toaster position="top-center" richColors />
+      <Scripts />
+    </>
   );
 }
