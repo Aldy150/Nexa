@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { formations } from "../data/formations";
 import FadeIn from "../components/animation/FadeIn";
 
-// ✅ PLUS D'IMPORT de "../../server/api" ici !
+
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
