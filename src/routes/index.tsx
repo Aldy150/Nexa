@@ -95,7 +95,7 @@ function Index() {
             {formations.map((f, i) => (
               <FadeIn key={f.slug} delay={i * 0.1}>
                 <div className="group rounded-2xl border border-border bg-card p-6 shadow-card transition-smooth hover:-translate-y-1 hover:shadow-elegant h-full">
-                  <div className="text-4xl">{f.icon}</div>
+                  <div className="text-4xl">{}</div>
                   <h3 className="mt-4 font-display text-xl font-bold">{f.title}</h3>
                   <p className="mt-2 text-sm text-muted-foreground">{f.short}</p>
                   <div className="mt-4 flex items-center justify-between">

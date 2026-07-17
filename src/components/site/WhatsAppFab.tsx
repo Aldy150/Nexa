@@ -1,7 +1,7 @@
 export function WhatsAppFab() {
   return (
     <a
-      href="https://wa.me/221770000000?text=Bonjour%20NEXA%2C%20je%20souhaite%20m'inscrire%20%C3%A0%20une%20formation"
+      href="https://wa.me/242056902178?text=Bonjour%20NEXA%2C%20je%20souhaite%20m'inscrire%20%C3%A0%20une%20formation"
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Contacter NEXA sur WhatsApp"
